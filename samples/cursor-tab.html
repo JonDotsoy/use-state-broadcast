@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="module">
+      import { stateBroadcast } from "../lib/esm/index.js";
+
+      /** @type {string[]} */
+      const colorLists = [
+        "#D3F8E2",
+        "#DCDDEE",
+        "#E4C1F9",
+        "#E9B6EB",
+        "#EDABDD",
+        "#F694C1",
+        "#F2BEB9",
+        "#EDE7B1",
+        "#CBE3D5",
+        "#A9DEF9",
+      ];
+
+      const tabId = crypto.randomUUID();
+
+      const pointersStates = stateBroadcast("pointers", {
+        [tabId]: { x: 0, y: 0 },
+      });
+
+      const content = document.getElementById("content");
+      const selectPointer = (pointerId) => {
+        const pointerFound = document.getElementById(pointerId);
+        if (pointerFound) return pointerFound;
+        // new pointer
+        const pointerSpan = document.createElement("span");
+        pointerSpan.id = pointerId;
+        pointerSpan.classList.add("pointer");
+        if (pointerId === tabId) pointerSpan.classList.add("is-host");
+        pointerSpan.style.setProperty("--pointer-x", "0px");
+        pointerSpan.style.setProperty("--pointer-y", "0px");
+        pointerSpan.style.setProperty(
+          "--color",
+          colorLists[
+            document.getElementsByClassName("pointer").length %
+              colorLists.length
+          ],
+        );
+        content.appendChild(pointerSpan);
+        return pointerSpan;
+      };
+
+      const tabPositions = {
+        clientX: 0,
+        clientY: 0,
+      };
+
+      const updateState = () => {
+        pointersStates.setState({
+          ...pointersStates.getState(),
+          [tabId]: {
+            x: tabPositions.clientX,
+            y: tabPositions.clientY,
+          },
+        });
+
+        for (const [tabId, { x, y }] of Object.entries(
+          pointersStates.getState(),
+        )) {
+          const pointer = selectPointer(tabId);
+
+          pointer.style.setProperty("--pointer-x", `${x}px`);
+          pointer.style.setProperty("--pointer-y", `${y}px`);
+        }
+      };
+
+      content.addEventListener("mousemove", (event) => {
+        tabPositions.clientX = event.clientX;
+        tabPositions.clientY = event.clientY;
+        updateState();
+      });
+
+      updateState();
+    </script>
+
+    <style>
+      body {
+        margin: 0px;
+      }
+
+      #content {
+        width: 100%;
+        height: 100vh;
+        background-color: #c7c7c7;
+        overflow: hidden;
+      }
+
+      .pointer {
+        position: absolute;
+        top: var(--pointer-y);
+        left: var(--pointer-x);
+        width: 1em;
+        height: 1em;
+        background-color: var(--color);
+        border-radius: 100%;
+        cursor: pointer;
+      }
+
+      .pointer.is-host {
+        z-index: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="content"></div>
+  </body>
+</html>

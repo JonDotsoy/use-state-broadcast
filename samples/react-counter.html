@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
+    <script type="module">
+      import { stateBroadcast } from "../lib/esm/index.js";
+
+      const counterState = stateBroadcast("counter", 0);
+
+      function Counter() {
+        const count = React.useSyncExternalStore(
+          counterState.subscribe,
+          counterState.getSnapshot,
+        );
+
+        const increment = () => counterState.setState(count + 1);
+
+        return React.createElement(
+          "div",
+          {},
+          React.createElement("span", null, "Count: ", count),
+          React.createElement("button", { onClick: increment }, "Increment"),
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("app"));
+      root.render(React.createElement(Counter, null));
+    </script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
