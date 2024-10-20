@@ -1,6 +1,6 @@
 {
   "name": "state-broadcast",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
   "type": "module",
@@ -25,5 +25,13 @@
   },
   "files": [
     "lib"
-  ]
+  ],
+  "keywords": [
+    "state",
+    "broadcast",
+    "broadcast-channel"
+  ],
+  "bugs": {
+    "url": "https://github.com/JonDotsoy/use-state-broadcast/issues"
+  }
 }
