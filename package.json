@@ -1,11 +1,11 @@
 {
   "name": "state-broadcast",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
   "type": "module",
   "scripts": {
-    "prepare": "make build",
+    "prepack": "make build",
     "build": "make build",
     "build-esm": "make build-esm",
     "build-types": "make build-types",
@@ -17,6 +17,11 @@
   "peerDependencies": {
     "typescript": "^5.0.0",
     "prettier": "*"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonDotsoy/use-state-broadcast.git"
   },
   "files": [
     "lib"
